@@ -118,6 +118,7 @@ other times it's a constant value (in the case of `LDI`). Using `ram_read()`,
 read the bytes at `PC+1` and `PC+2` from RAM into variables `operand_a` and
 `operand_b` in case the instruction needs them.
 
+
 Then, depending on the value of the opcode, perform the actions needed for the
 instruction per the LS-8 spec. Maybe an `if-elif` cascade...? There are other
 options, too.
@@ -153,7 +154,7 @@ the LS-8 spec.
 
 *At this point, you should be able to run the program and have it print `8` to
 the console!*
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## Step 7: Un-hardcode the machine code
 
 In `cpu.py`, the LS-8 programs you've been running so far have been hardcoded

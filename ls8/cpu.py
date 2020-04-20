@@ -6,8 +6,8 @@ class CPU:
     """Main CPU class."""
 
     def __init__(self):
-        self.ram = [0] * 256, #check if correct
-        self.register = [0] * 8,
+        self.ram = [0] * 256 #check if correct
+        self.register = [0] * 8
         self.pc = 0
 
 
@@ -71,17 +71,20 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
-        HLT == 0b00000001
+        HLT = 0b00000001
+        LDI = 0b10000010
+        PRN = 0b01000111
+
         while running:
             ir = self.ram[self.pc]
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
 
-            if ir == 0b10000010:
+            if ir == LDI:
                 self.ram_write(operand_a, operand_b)
                 self.pc += 3
-            elif ir == 0b01000111:
-                print(self.ram_read(operand_a)
+            elif ir == PRN:
+                print(self.ram_read(operand_a))
                 self.pc += 2
             elif ir == HLT:
                 running = False
