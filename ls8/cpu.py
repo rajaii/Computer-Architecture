@@ -26,9 +26,9 @@ class CPU:
                 if instruction == '':
                     continue
                 #MAYBE:
-                # self.ram[address] = int(instruction, 2)
-                
                 self.ram[address] = int(instruction, 2)
+                
+                # self.ram[address] = int(instruction, 2)
 
                 address += 1
 
@@ -88,6 +88,7 @@ class CPU:
 
             if ir == LDI:
                 self.ram_write(operand_a, operand_b)
+                self.register[operand_a] = operand_b
                 self.pc += 3
             elif ir == PRN:
                 print(self.ram_read(operand_a))
