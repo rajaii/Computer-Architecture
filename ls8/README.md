@@ -208,6 +208,7 @@ second argument:
 ```python
 x = int("1010101", 2)  # Convert binary string to integer
 ```
+//////////////////////////////////////////////////////////////
 
 ## Step 8: Implement a Multiply and Print the Result
 

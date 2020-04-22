@@ -9,6 +9,8 @@ class CPU:
         self.ram = [0] * 256 #check if correct
         self.register = [0] * 8
         self.pc = 0
+        self.SP = 7
+        self.register[self.SP] = 0xf4
 
 
     def load(self):
@@ -80,17 +82,21 @@ class CPU:
         LDI = 0b10000010
         PRN = 0b01000111
         MUL = 0b10100010
-
+        PUSH = 0b01000101
+        POP = 0b01000110
+        
         while running:
+            
+            
             ir = self.ram[self.pc]
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
 
-            if ir == LDI:
+            if ir == LDI:#set value of reg to int
                 self.ram_write(operand_a, operand_b)
                 self.register[operand_a] = operand_b
                 self.pc += 3
-            elif ir == PRN:
+            elif ir == PRN:#print value stored in given reg
                 print(self.ram_read(operand_a))
                 self.pc += 2
             elif ir == HLT:
@@ -101,6 +107,33 @@ class CPU:
                 self.alu("MUL", operand_a, operand_b)
                 #increment self.pc
                 self.pc += 3
+            elif ir == PUSH:
+                #decrement register's value
+                prev = self.register[self.SP]
+                self.register[self.SP] -= 1
+                #take value at register[pc + 1] and add to stack
+                reg_num = operand_a
+                value = self.register[reg_num] 
+                address = self.register[self.SP]
+                #self.ram[address] = value
+                self.ram_write(address, value)
+
+
+                #increment pc
+                self.pc += 2
+            elif ir == POP:
+                #copy value from bottom of stack and put in register[pc+1]
+            
+                value = self.ram[self.register[self.SP]]
+                self.ram_write(operand_a, value)
+                self.register[operand_a] = value
+                #increment stack pointer 
+                prev = self.register[self.SP]
+                self.register[self.SP] += 1
+                
+                #increment pc
+                self.pc += 2
+
             else:
                 print('unknown command')
                 running = False
