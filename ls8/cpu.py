@@ -11,6 +11,7 @@ class CPU:
         self.pc = 0
         self.SP = 7
         self.register[self.SP] = 0xf4
+        self.FL = 0b00000000
 
 
     def load(self):
@@ -34,7 +35,13 @@ class CPU:
 
                 address += 1
 
-        
+    def compare_registers(self, r_a, r_b):
+        if r_a == r_b:
+            self.FL = 0b00000001 
+        if r_a < r_b:
+            self.FL = 0b00000100
+        if r_a > r_b:
+            self.FL = 0b00000010  
 
 
 
@@ -79,12 +86,17 @@ class CPU:
         """Run the CPU."""
         running = True
         HLT = 0b00000001
+        ADD = 0b10100000
         LDI = 0b10000010
         PRN = 0b01000111
         MUL = 0b10100010
         PUSH = 0b01000101
         POP = 0b01000110
+        CALL = 0b01010000
+        RET = 0b00010001
         
+        
+
         while running:
             
             
@@ -93,11 +105,12 @@ class CPU:
             operand_b = self.ram_read(self.pc + 2)
 
             if ir == LDI:#set value of reg to int
+                # print('in LDI')
                 self.ram_write(operand_a, operand_b)
                 self.register[operand_a] = operand_b
                 self.pc += 3
             elif ir == PRN:#print value stored in given reg
-                print(self.ram_read(operand_a))
+                print(self.register[operand_a])
                 self.pc += 2
             elif ir == HLT:
                 running = False
@@ -107,6 +120,12 @@ class CPU:
                 self.alu("MUL", operand_a, operand_b)
                 #increment self.pc
                 self.pc += 3
+            elif ir == ADD:
+                print(f'just added {self.register[operand_a]} and {self.register[operand_a]}')
+                self.alu("ADD", operand_a, operand_a)
+                
+                self.pc += 3
+            
             elif ir == PUSH:
                 #decrement register's value
                 prev = self.register[self.SP]
@@ -133,9 +152,27 @@ class CPU:
                 
                 #increment pc
                 self.pc += 2
+            elif ir == CALL:
+                print('in call')
+                return_add = self.pc + 2
+
+                self.register[self.SP] -= 1
+                self.ram[self.register[self.SP]] = return_add
+                # print(f'just set {self.ram[self.register[self.SP]]} to {return_add}')
+                reg_num = operand_a
+                dest_addr = self.register[reg_num]
+
+                self.pc = dest_addr
+
+            elif ir == RET:
+                print('in ret')
+                return_add = self.ram[self.register[self.SP]]
+                self.register[self.SP] += 1
+
+                self.pc = return_add
 
             else:
-                print('unknown command')
+                print(f'{ir} == unknown command')
                 running = False
              
 
