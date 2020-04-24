@@ -35,15 +35,6 @@ class CPU:
 
                 address += 1
 
-    def compare_registers(self, r_a, r_b):
-        if r_a == r_b:
-            self.FL = 0b00000001 
-        if r_a < r_b:
-            self.FL = 0b00000100
-        if r_a > r_b:
-            self.FL = 0b00000010  
-
-
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -53,6 +44,17 @@ class CPU:
         #elif op == "SUB": etc
         elif op == "MUL":
             self.ram[reg_a] *= self.ram[reg_b]
+        elif op == "CMP":
+            if reg_a == reg_b:#E flag is true
+                self.FL = 0b00000001 
+                # print('settilng e flag to true')
+            if reg_a != reg_b:
+                self.FL = 0b00000000#set e flag to false
+                # print('setting e flag to false')
+            if reg_a < reg_b:#L flag is true
+                self.FL = 0b00000100
+            if reg_a > reg_b:#G flag is true
+                self.FL = 0b00000010 
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -94,7 +96,10 @@ class CPU:
         POP = 0b01000110
         CALL = 0b01010000
         RET = 0b00010001
-        
+        JMP = 0b01010100
+        JNE = 0b01010110
+        JEQ = 0b01010101
+        CMP = 0b10100111
         
 
         while running:
@@ -124,8 +129,7 @@ class CPU:
                 print(f'just added {self.register[operand_a]} and {self.register[operand_a]}')
                 self.alu("ADD", operand_a, operand_a)
                 
-                self.pc += 3
-            
+                self.pc += 3           
             elif ir == PUSH:
                 #decrement register's value
                 prev = self.register[self.SP]
@@ -163,14 +167,39 @@ class CPU:
                 dest_addr = self.register[reg_num]
 
                 self.pc = dest_addr
-
             elif ir == RET:
                 print('in ret')
                 return_add = self.ram[self.register[self.SP]]
                 self.register[self.SP] += 1
 
                 self.pc = return_add
-
+            elif ir == JMP:
+                
+                reg_num = operand_a
+                dest_addr = self.register[reg_num]
+                print(f'jumping to {dest_addr} in JMP')
+                self.pc = dest_addr
+            elif ir == CMP:
+                self.alu("CMP", self.register[operand_a], self.register[operand_b])
+                # print(f'comparing {self.register[operand_a]} to {self.register[operand_b]}')
+                self.pc += 3
+            elif ir == JNE:
+                if self.FL != 0b00000001:
+                    # print('in JNE')
+                    reg_num = operand_a
+                    dest_addr = self.register[reg_num]
+                    # print(f'jumping to {dest_addr} in JNE')
+                    self.pc = dest_addr 
+                else:
+                    self.pc += 2
+            elif ir == JEQ:
+                if self.FL == 0b00000001:
+                    reg_num = operand_a
+                    dest_addr = self.register[reg_num]
+                    # print(f'jumping to {dest_addr} in JEQ')
+                    self.pc = dest_addr 
+                else:
+                    self.pc += 2
             else:
                 print(f'{ir} == unknown command')
                 running = False
