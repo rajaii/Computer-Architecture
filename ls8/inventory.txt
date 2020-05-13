@@ -1,0 +1,9 @@
+cpu.py; main class that holds and will be used to define cpu
+
+done: trace
+
+needs: consturctor, program made dynamic, run, alu other operations
+
+=====================================================================
+
+ls8.py; calls the cpu class and runs cpu

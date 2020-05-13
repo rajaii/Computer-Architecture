@@ -118,6 +118,7 @@ other times it's a constant value (in the case of `LDI`). Using `ram_read()`,
 read the bytes at `PC+1` and `PC+2` from RAM into variables `operand_a` and
 `operand_b` in case the instruction needs them.
 
+
 Then, depending on the value of the opcode, perform the actions needed for the
 instruction per the LS-8 spec. Maybe an `if-elif` cascade...? There are other
 options, too.
@@ -153,7 +154,7 @@ the LS-8 spec.
 
 *At this point, you should be able to run the program and have it print `8` to
 the console!*
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## Step 7: Un-hardcode the machine code
 
 In `cpu.py`, the LS-8 programs you've been running so far have been hardcoded
@@ -208,6 +209,7 @@ second argument:
 x = int("1010101", 2)  # Convert binary string to integer
 ```
 
+
 ## Step 8: Implement a Multiply and Print the Result
 
 Extend your LS8 emulator to support the following program:
@@ -240,7 +242,7 @@ Check the LS-8 spec for what the `MUL` instruction does.
 > Note: `MUL` is the responsiblity of the ALU, so it would be nice if your code
 > eventually called the `alu()` function with appropriate arguments to get the
 > work done.
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## Step 9: Beautify your `run()` loop
 
 Do you have a big `if-elif` block in your `cpu_run()` function? Is there a way
@@ -287,7 +289,7 @@ class Foo:
 c = Foo()
 c.run()
 ```
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ## Step 10: Implement System Stack
 
 All CPUs manage a _stack_ that can be used to store information temporarily.
@@ -297,8 +299,8 @@ exception to this.
 
 Implement a system stack per the spec. Add `PUSH` and `POP` instructions. Read
   the beginning of the spec to see which register is the stack pointer. 
-  
-* Values themselves should be saved in the ***portion of RAM*** _that is allocated for the stack_. 
+ **F4= r7 = sp**
+* Values themselves should be saved in the ***portion of RAM*** _that is allocated for the stack_. **f3 down is ram for stack** 
   -  Use the stack pointer to modify the correct block of memory. 
   - Make sure you update the stack pointer appropriately as you `PUSH` and `POP` items to and from the stack.
 
@@ -309,7 +311,7 @@ If you run `python3 ls8.py examples/stack.ls8` you should see the output:
 4
 1
 ```
-
+/////////////////////////////////////////////////////////////////e  
 ## Step 11: Implement Subroutine Calls
 
 Back in the old days, functions were called _subroutines_. In machine code,
